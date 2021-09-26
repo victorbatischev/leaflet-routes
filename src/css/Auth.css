@@ -1,0 +1,101 @@
+.auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #00194b;
+}
+
+.auth__form {
+  width: 40%;
+  position: relative;
+}
+
+.auth__title {
+  text-align: left;
+  font: normal normal 800 20px/20px Roboto;
+  letter-spacing: 0px;
+  color: #fff;
+  text-transform: uppercase;
+  opacity: 1;
+  margin-bottom: 4.5rem;
+}
+
+.auth__field {
+  width: 400px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #203561;
+}
+
+.auth__field label {
+  width: 80px;
+  text-align: left;
+  font: normal normal normal 15px/20px Roboto;
+  letter-spacing: 0px;
+  color: #fff;
+  opacity: 0.4;
+}
+
+.auth__field input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  text-align: left;
+  font: normal normal normal 16px/20px Roboto;
+  letter-spacing: 0px;
+  -webkit-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+}
+
+.auth__submit {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 3rem;
+}
+
+.auth__submit button {
+  background: #005fdc 0% 0% no-repeat padding-box;
+  border-radius: 7px;
+  opacity: 1;
+  padding: 1rem 4rem;
+  border: none;
+  outline: none;
+  color: #fff;
+  font: normal normal normal 15px/20px Roboto;
+}
+
+.auth__submit:hover button {
+  background: #2492ff;
+}
+
+.auth__error {
+  display: flex;
+  position: absolute;
+  bottom: -3rem;
+  color: #d46767;
+  text-align: left;
+  font: normal normal normal 16px/20px Roboto;
+  letter-spacing: 0px;
+}
+
+.auth__error-cross {
+  display: block;
+  font-size: 1.5rem;
+  transform: rotate(45deg);
+  margin-right: 1rem;
+}
+
+.auth,
+.auth * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
