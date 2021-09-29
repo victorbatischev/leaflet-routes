@@ -9,6 +9,7 @@ import Map from './Map'
 import OrdersList from './OrdersList'
 
 import { dataUrl, data } from '../Constants'
+import { drawRoutes } from '../Utils'
 
 const MapContainer = () => {
   const [orders, setOrders] = useState(null)
@@ -102,7 +103,11 @@ const MapContainer = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             {ordersByDriver ? (
-              <OrdersList orders={ordersByDriver} dates={dates} />
+              <OrdersList
+                orders={ordersByDriver}
+                dates={dates}
+                drawRoutes={drawRoutes}
+              />
             ) : (
               <div>Загрузка...</div>
             )}

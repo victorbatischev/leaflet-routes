@@ -10,7 +10,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 
-const OrdersList = ({ orders, dates }) => {
+const OrdersList = ({ orders, dates, drawRoutes }) => {
   return dates.slice(0, orders.length).map((item, index) => (
     <Accordion key={index.toString()}>
       <AccordionSummary
@@ -31,7 +31,12 @@ const OrdersList = ({ orders, dates }) => {
               id={`panel${idx}bh-header-inner`}
             >
               <Typography sx={{ width: '100%', flexShrink: 0 }}>
-                <Button endIcon={<LocationIcon />}>{el[0].driver.name}</Button>
+                <Button
+                  onClick={() => drawRoutes(el)}
+                  endIcon={<LocationIcon />}
+                >
+                  {el[0].driver.name}
+                </Button>
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
