@@ -4,20 +4,11 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import Accordion from '@mui/material/Accordion'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import Typography from '@mui/material/Typography'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import LocationIcon from '@mui/icons-material/MyLocation'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
 
 import Map from './Map'
+import OrdersList from './OrdersList'
 
-import { dataUrl } from '../Constants'
+import { dataUrl, data } from '../Constants'
 
 const MapContainer = () => {
   const [orders, setOrders] = useState(null)
@@ -38,6 +29,7 @@ const MapContainer = () => {
         console.log(responseJson)
       })
       .catch((e) => {
+        setOrders(data)
         console.error(e)
       })
   }
@@ -83,50 +75,6 @@ const MapContainer = () => {
     }
   }, [ordersByDate])
 
-  const OrdersList = ({ orders }) => {
-    return dates.slice(0, orders.length).map((item, index) => (
-      <Accordion key={index.toString()}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls={`panel${index}bh-content`}
-          id={`panel${index}bh-header`}
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            {new Date(item).toLocaleDateString('ru')}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {orders[index]?.map((el, idx) => (
-            <Accordion key={`inner-${idx}`}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${idx}bh-content-inner`}
-                id={`panel${idx}bh-header-inner`}
-              >
-                <Typography sx={{ width: '100%', flexShrink: 0 }}>
-                  <Button endIcon={<LocationIcon />}>
-                    {el[0].driver.name}
-                  </Button>
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <List>
-                  {el.map((order, id) => (
-                    <ListItem disablePadding key={id.toString()}>
-                      <ListItemButton>
-                        <ListItemText primary={order.address} />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </AccordionDetails>
-      </Accordion>
-    ))
-  }
-
   return (
     <Container>
       <Box style={{ marginTop: 30 }}>
@@ -141,29 +89,20 @@ const MapContainer = () => {
           </Grid>
           <Grid item xs={12} sm={2} md={2} xl={1}>
             <Button
-              onClick={() => {
-                searchOrders(inputNumber.current.value)
-              }}
+              onClick={() => searchOrders(inputNumber.current.value)}
               variant='contained'
-              size='medium'
             >
               Поиск
             </Button>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Button
-              onClick={() => {
-                searchOrders()
-              }}
-              variant='outlined'
-              size='medium'
-            >
+            <Button onClick={() => searchOrders()} variant='outlined'>
               Сбросить
             </Button>
           </Grid>
           <Grid item xs={12} sm={6}>
             {ordersByDriver ? (
-              <OrdersList orders={ordersByDriver} />
+              <OrdersList orders={ordersByDriver} dates={dates} />
             ) : (
               <div>Загрузка...</div>
             )}
