@@ -20,6 +20,7 @@ const MapContainer = () => {
   const [selectedDate, setSelectedDate] = useState('')
   const [totalDistance, setTotalDistance] = useState(0)
   const [path, setPath] = useState([])
+  const [bounds, setBounds] = useState(null)
 
   const inputNumber = useRef(null)
 
@@ -78,9 +79,9 @@ const MapContainer = () => {
   }, [ordersByDate])
 
   const showRouteOnMap = async (el) => {
-    const { polyline, distance } = await drawRoutes(el)
-    console.log(polyline, distance)
+    const { polyline, bounds, distance } = await drawRoutes(el)
     setPath(polyline)
+    setBounds(bounds)
     setTotalDistance(distance)
   }
 
@@ -96,27 +97,31 @@ const MapContainer = () => {
               inputRef={inputNumber}
             />
           </Grid>
-          <Grid item xs={12} sm={2} md={2} xl={1}>
-            <Button
-              onClick={() => searchOrders(inputNumber.current.value)}
-              variant='contained'
-            >
-              Поиск
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Button
-              onClick={() => {
-                setSelectedDate('')
-                setSelectedDriver('')
-                setTotalDistance(0)
-                setPath([])
-                searchOrders()
-              }}
-              variant='outlined'
-            >
-              Сбросить
-            </Button>
+          <Grid item xs={12} sm={4} md={4} xl={3}>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <Button
+                onClick={() => searchOrders(inputNumber.current.value)}
+                variant='contained'
+                size='large'
+                style={{ marginRight: 20 }}
+              >
+                Поиск
+              </Button>
+              <Button
+                onClick={() => {
+                  setSelectedDate('')
+                  setSelectedDriver('')
+                  setTotalDistance(0)
+                  setPath([])
+                  setBounds(null)
+                  searchOrders()
+                }}
+                variant='outlined'
+                size='large'
+              >
+                Сбросить
+              </Button>
+            </div>
           </Grid>
         </Grid>
         <Grid container spacing={12}>
@@ -140,7 +145,7 @@ const MapContainer = () => {
             <div>
               Дата: <b>{selectedDate}</b>
             </div>
-            <Map path={path} />
+            <Map path={path} bounds={bounds} />
             <div>
               Итоговое расстояние: <b>{totalDistance}</b> км
             </div>

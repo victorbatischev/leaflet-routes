@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, LayersControl, Polyline } from 'react-leaflet'
 import L from 'leaflet'
 
@@ -6,12 +7,25 @@ import '../css/Map.css'
 // указываем путь к файлам marker
 L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.5.0/dist/images/'
 
-const center = [55.5, 37.5]
+const center = [55.7, 37.6]
 
-const Map = ({ path }) => {
+const Map = ({ path, bounds }) => {
+  const [map, setMap] = useState(null)
+
+  useEffect(() => {
+    if (map && path && bounds) {
+      map.flyToBounds(bounds)
+    } // eslint-disable-next-line
+  }, [path, bounds])
+
   return (
     <div className='map'>
-      <MapContainer center={center} zoom={3} scrollWheelZoom={true}>
+      <MapContainer
+        center={center}
+        zoom={9}
+        scrollWheelZoom={true}
+        whenCreated={setMap}
+      >
         <LayersControl position='topright'>
           <LayersControl.BaseLayer checked name='Satellite'>
             <TileLayer
