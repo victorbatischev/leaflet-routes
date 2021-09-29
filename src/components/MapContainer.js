@@ -19,6 +19,7 @@ const MapContainer = () => {
   const [selectedDriver, setSelectedDriver] = useState('')
   const [selectedDate, setSelectedDate] = useState('')
   const [totalDistance, setTotalDistance] = useState(0)
+  const [path, setPath] = useState([])
 
   const inputNumber = useRef(null)
 
@@ -76,10 +77,17 @@ const MapContainer = () => {
     }
   }, [ordersByDate])
 
+  const showRouteOnMap = async (el) => {
+    const { polyline, distance } = await drawRoutes(el)
+    console.log(polyline, distance)
+    setPath(polyline)
+    setTotalDistance(distance)
+  }
+
   return (
     <Container>
       <Box style={{ marginTop: 30 }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} marginBottom={6}>
           <Grid item xs={12} sm={2}></Grid>
           <Grid item xs={12} sm={3}>
             <TextField
@@ -97,16 +105,29 @@ const MapContainer = () => {
             </Button>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Button onClick={() => searchOrders()} variant='outlined'>
+            <Button
+              onClick={() => {
+                setSelectedDate('')
+                setSelectedDriver('')
+                setTotalDistance(0)
+                setPath([])
+                searchOrders()
+              }}
+              variant='outlined'
+            >
               Сбросить
             </Button>
           </Grid>
+        </Grid>
+        <Grid container spacing={12}>
           <Grid item xs={12} sm={6}>
             {ordersByDriver ? (
               <OrdersList
                 orders={ordersByDriver}
                 dates={dates}
-                drawRoutes={drawRoutes}
+                setSelectedDate={setSelectedDate}
+                setSelectedDriver={setSelectedDriver}
+                showRouteOnMap={showRouteOnMap}
               />
             ) : (
               <div>Загрузка...</div>
@@ -119,9 +140,9 @@ const MapContainer = () => {
             <div>
               Дата: <b>{selectedDate}</b>
             </div>
-            <Map />
+            <Map path={path} />
             <div>
-              Километраж: <b>{totalDistance}</b> км
+              Итоговое расстояние: <b>{totalDistance}</b> км
             </div>
           </Grid>
         </Grid>

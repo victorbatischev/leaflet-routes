@@ -10,7 +10,13 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 
-const OrdersList = ({ orders, dates, drawRoutes }) => {
+const OrdersList = ({
+  orders,
+  dates,
+  showRouteOnMap,
+  setSelectedDate,
+  setSelectedDriver
+}) => {
   return dates.slice(0, orders.length).map((item, index) => (
     <Accordion key={index.toString()}>
       <AccordionSummary
@@ -32,7 +38,11 @@ const OrdersList = ({ orders, dates, drawRoutes }) => {
             >
               <Typography sx={{ width: '100%', flexShrink: 0 }}>
                 <Button
-                  onClick={() => drawRoutes(el)}
+                  onClick={() => {
+                    setSelectedDate(new Date(item).toLocaleDateString('ru'))
+                    setSelectedDriver(el[0].driver.name)
+                    showRouteOnMap(el)
+                  }}
                   endIcon={<LocationIcon />}
                 >
                   {el[0].driver.name}

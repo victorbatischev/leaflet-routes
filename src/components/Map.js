@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, LayersControl } from 'react-leaflet'
+import { MapContainer, TileLayer, LayersControl, Polyline } from 'react-leaflet'
 import L from 'leaflet'
 
 import '../css/Map.css'
@@ -6,12 +6,12 @@ import '../css/Map.css'
 // указываем путь к файлам marker
 L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.5.0/dist/images/'
 
-const center = [51.505, -0.09]
+const center = [55.5, 37.5]
 
-const Map = () => {
+const Map = ({ path }) => {
   return (
     <div className='map'>
-      <MapContainer center={center} zoom={13} scrollWheelZoom={false}>
+      <MapContainer center={center} zoom={3} scrollWheelZoom={true}>
         <LayersControl position='topright'>
           <LayersControl.BaseLayer checked name='Satellite'>
             <TileLayer
@@ -32,6 +32,7 @@ const Map = () => {
             />
           </LayersControl.BaseLayer>
         </LayersControl>
+        <Polyline positions={path} />
       </MapContainer>
     </div>
   )

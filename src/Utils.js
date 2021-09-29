@@ -32,10 +32,12 @@ const getRoute = (coords) => {
   )
     .then((response) => response.json())
     .then((responseJson) => {
-      var result = polyline.decode(responseJson.routes[0].geometry)
+      var result = responseJson.routes[0]
       return {
-        polyline: result,
-        distance: responseJson.routes[0].summary.distance
+        polyline: polyline.decode(result.geometry),
+        distance: result.summary.distance
+          ? (result.summary.distance / 1000).toFixed(3)
+          : 0
       }
     })
 }
