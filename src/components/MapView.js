@@ -1,16 +1,39 @@
-import { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, LayersControl, Polyline } from 'react-leaflet'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import {
+  MapContainer,
+  TileLayer,
+  LayersControl,
+  Polyline,
+  Marker,
+  Popup,
+  Tooltip
+} from 'react-leaflet'
 import L from 'leaflet'
 
 import '../css/Map.css'
 
+import { center } from '../Constants'
+
 // указываем путь к файлам marker
 L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.5.0/dist/images/'
 
-const center = [55.7, 37.6]
-
-const Map = ({ path, bounds }) => {
+const MapView = ({ path, bounds }) => {
   const [map, setMap] = useState(null)
+  const [position, setPosition] = useState(center)
+
+  const markerRef = useRef(null)
+
+  const eventHandlers = useMemo(
+    () => ({
+      dragend() {
+        const marker = markerRef.current
+        if (marker != null) {
+          setPosition(marker.getLatLng())
+        }
+      }
+    }),
+    []
+  )
 
   useEffect(() => {
     if (map && path && bounds) {
@@ -46,10 +69,22 @@ const Map = ({ path, bounds }) => {
             />
           </LayersControl.BaseLayer>
         </LayersControl>
+        <Marker
+          eventHandlers={eventHandlers}
+          position={position}
+          ref={markerRef}
+          draggable
+          riseOnHover
+        >
+          <Popup>{center.join('; ')}</Popup>
+          <Tooltip permanent direction={'top'} offset={{ x: -15, y: -20 }}>
+            МКАД 0км
+          </Tooltip>
+        </Marker>
         <Polyline positions={path} />
       </MapContainer>
     </div>
   )
 }
 
-export default Map
+export default MapView

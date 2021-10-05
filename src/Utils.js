@@ -3,6 +3,8 @@ import { YANDEX_KEY, ROUTES_KEY } from './Constants'
 var polyline = require('@mapbox/polyline')
 
 const getCoordinate = (address) => {
+  if (address === 'МКАД 0км') return ['37.842919', '55.777142']
+
   return fetch(
     `https://geocode-maps.yandex.ru/1.x/?format=json&apikey=${YANDEX_KEY}&geocode=${address}`
   )
@@ -37,6 +39,7 @@ const getRoute = (coords) => {
       return {
         polyline: polyline.decode(result.geometry),
         bounds: [bbox.splice(0, 2), bbox.splice(-2)],
+        coordinates: coords,
         distance: result.summary.distance
           ? (result.summary.distance / 1000).toFixed(1)
           : 0

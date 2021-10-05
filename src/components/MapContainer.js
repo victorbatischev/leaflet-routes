@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-import Map from './Map'
+import MapView from './MapView'
 import OrdersList from './OrdersList'
 
 import { dataUrl, data } from '../Constants'
@@ -68,9 +68,21 @@ const MapContainer = () => {
         // получаем массив уникальных водителей по каждой дате
         const uniqueDrivers = [...new Set(orders.map((item) => item.driver.id))]
         // получаем массив заказов, отфильтрованный по водителю
-        return uniqueDrivers.map((driver) =>
-          orders.filter((order) => order.driver.id === driver)
-        )
+        return uniqueDrivers.map((driver) => {
+          const orderMapArray = [
+            ...new Map(
+              orders
+                .filter((order) => order.driver.id === driver)
+                .map((item) => [item.address, item])
+            ).values()
+          ]
+          orderMapArray.unshift({
+            ...orderMapArray[0],
+            id: orderMapArray[0].id + '-init',
+            address: 'МКАД 0км'
+          })
+          return orderMapArray
+        })
       })
 
       setOrdersByDriver(filteredOrders)
@@ -145,7 +157,7 @@ const MapContainer = () => {
             <div>
               Дата: <b>{selectedDate}</b>
             </div>
-            <Map path={path} bounds={bounds} />
+            <MapView path={path} bounds={bounds} />
             <div>
               Итоговое расстояние: <b>{totalDistance}</b> км
             </div>

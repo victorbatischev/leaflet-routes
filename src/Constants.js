@@ -5,6 +5,8 @@ export const YANDEX_KEY = '952d9343-ee93-466c-875d-89a9bfe4a5c5'
 export const ROUTES_KEY =
   '5b3ce3597851110001cf6248996fec9d63534991b10d5edd79adad33'
 
+export const center = [55.777142, 37.842919]
+
 export const dataDriver = [
   {
     id: 'c46fc735-78ac-4c3f-8c28-64228512a53f',

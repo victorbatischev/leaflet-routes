@@ -5,10 +5,10 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import Typography from '@mui/material/Typography'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import LocationIcon from '@mui/icons-material/MyLocation'
-import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 const OrdersList = ({
   orders,
@@ -50,15 +50,38 @@ const OrdersList = ({
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <List>
-                {el.map((order, id) => (
-                  <ListItem disablePadding key={id.toString()}>
-                    <ListItemButton>
-                      <ListItemText primary={order.address} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
+              <DragDropContext onDragEnd={() => {}}>
+                <Droppable droppableId='list'>
+                  {(provided) => (
+                    <div ref={provided.innerRef}>
+                      {el.map((order, id) => (
+                        <Draggable
+                          draggableId={order.id}
+                          index={id}
+                          key={id.toString()}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <ListItem disablePadding>
+                                <ListItemButton>
+                                  <ListItemText
+                                    primary={`${id}. ${order.address}`}
+                                  />
+                                </ListItemButton>
+                              </ListItem>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </AccordionDetails>
           </Accordion>
         ))}
