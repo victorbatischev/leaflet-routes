@@ -14,10 +14,19 @@ import '../css/Map.css'
 
 import { center } from '../Constants'
 
+import { getRoute } from '../Utils'
+
 // указываем путь к файлам marker
 L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.5.0/dist/images/'
 
-const MapView = ({ path, bounds }) => {
+const MapView = ({
+  path,
+  bounds,
+  coords,
+  setPath,
+  setBounds,
+  setTotalDistance
+}) => {
   const [map, setMap] = useState(null)
   const [position, setPosition] = useState(center)
 
@@ -28,7 +37,10 @@ const MapView = ({ path, bounds }) => {
       dragend() {
         const marker = markerRef.current
         if (marker != null) {
-          setPosition(marker.getLatLng())
+          const tempPosition = Object.values(marker.getLatLng()).map((item) =>
+            item.toFixed(6).toString()
+          )
+          setPosition(tempPosition)
         }
       }
     }),
@@ -40,6 +52,36 @@ const MapView = ({ path, bounds }) => {
       map.flyToBounds(bounds)
     } // eslint-disable-next-line
   }, [path, bounds])
+
+  useEffect(() => {
+    setPosition(center)
+  }, [coords])
+
+  useEffect(() => {
+    if (coords && coords.length && position) {
+      let tempCoords = [...coords]
+      tempCoords[0] = position
+      tempCoords = tempCoords.map((item) => item.reverse())
+      console.log(tempCoords)
+
+      async function getData() {
+        const { polyline, bounds, distance } = await getRoute(tempCoords)
+        setPath(polyline)
+        setBounds(bounds)
+        setTotalDistance(distance)
+      }
+
+      getData()
+    } // eslint-disable-next-line
+  }, [position])
+
+  var greenIcon = L.icon({
+    iconUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/f/f2/678111-map-marker-512.png',
+    iconSize: [40, 40],
+    tooltipAnchor: [15, -10],
+    popupAnchor: [0, -20]
+  })
 
   return (
     <div className='map'>
@@ -69,18 +111,40 @@ const MapView = ({ path, bounds }) => {
             />
           </LayersControl.BaseLayer>
         </LayersControl>
-        <Marker
-          eventHandlers={eventHandlers}
-          position={position}
-          ref={markerRef}
-          draggable
-          riseOnHover
-        >
-          <Popup>{center.join('; ')}</Popup>
-          <Tooltip permanent direction={'top'} offset={{ x: -15, y: -20 }}>
-            МКАД 0км
-          </Tooltip>
-        </Marker>
+        {coords &&
+          coords.map((item, index) =>
+            index === 0 ? (
+              <Marker
+                eventHandlers={eventHandlers}
+                position={position}
+                ref={markerRef}
+                draggable
+                riseOnHover
+                key={index.toString()}
+                icon={greenIcon}
+              >
+                <Popup>{position.join('; ')}</Popup>
+                <Tooltip
+                  permanent
+                  direction={'top'}
+                  offset={{ x: -15, y: -10 }}
+                >
+                  <b style={{ fontSize: 14 }}>0</b>
+                </Tooltip>
+              </Marker>
+            ) : (
+              <Marker position={item} riseOnHover key={index.toString()}>
+                <Popup>{item.join('; ')}</Popup>
+                <Tooltip
+                  permanent
+                  direction={'top'}
+                  offset={{ x: -15, y: -10 }}
+                >
+                  <b style={{ fontSize: 14 }}>{index}</b>
+                </Tooltip>
+              </Marker>
+            )
+          )}
         <Polyline positions={path} />
       </MapContainer>
     </div>

@@ -21,6 +21,7 @@ const MapContainer = () => {
   const [totalDistance, setTotalDistance] = useState(0)
   const [path, setPath] = useState([])
   const [bounds, setBounds] = useState(null)
+  const [coordinates, setCoordinates] = useState([])
 
   const inputNumber = useRef(null)
 
@@ -91,10 +92,11 @@ const MapContainer = () => {
   }, [ordersByDate])
 
   const showRouteOnMap = async (el) => {
-    const { polyline, bounds, distance } = await drawRoutes(el)
+    const { polyline, bounds, distance, coordinates } = await drawRoutes(el)
     setPath(polyline)
     setBounds(bounds)
     setTotalDistance(distance)
+    setCoordinates(coordinates)
   }
 
   return (
@@ -157,7 +159,14 @@ const MapContainer = () => {
             <div>
               Дата: <b>{selectedDate}</b>
             </div>
-            <MapView path={path} bounds={bounds} />
+            <MapView
+              path={path}
+              bounds={bounds}
+              coords={coordinates}
+              setPath={setPath}
+              setBounds={setBounds}
+              setTotalDistance={setTotalDistance}
+            />
             <div>
               Итоговое расстояние: <b>{totalDistance}</b> км
             </div>

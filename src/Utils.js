@@ -20,7 +20,7 @@ const getCoordinate = (address) => {
     })
 }
 
-const getRoute = (coords) => {
+export const getRoute = (coords) => {
   return fetch(
     'https://api.openrouteservice.org/v2/directions/driving-car/json',
     {
@@ -39,7 +39,7 @@ const getRoute = (coords) => {
       return {
         polyline: polyline.decode(result.geometry),
         bounds: [bbox.splice(0, 2), bbox.splice(-2)],
-        coordinates: coords,
+        coordinates: coords.map((item) => item.reverse()),
         distance: result.summary.distance
           ? (result.summary.distance / 1000).toFixed(1)
           : 0
