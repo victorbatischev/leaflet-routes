@@ -147,6 +147,7 @@ const MapContainer = () => {
                 setSelectedDate={setSelectedDate}
                 setSelectedDriver={setSelectedDriver}
                 showRouteOnMap={showRouteOnMap}
+                setOrders={setOrdersByDriver}
               />
             ) : (
               <div>Загрузка...</div>
