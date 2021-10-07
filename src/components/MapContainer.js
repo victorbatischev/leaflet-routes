@@ -160,6 +160,9 @@ const MapContainer = () => {
             <div>
               Дата: <b>{selectedDate}</b>
             </div>
+            <div style={{ marginBottom: 20 }}>
+              Итоговое расстояние: <b>{totalDistance}</b> км
+            </div>
             <MapView
               path={path}
               bounds={bounds}
@@ -168,9 +171,7 @@ const MapContainer = () => {
               setBounds={setBounds}
               setTotalDistance={setTotalDistance}
             />
-            <div>
-              Итоговое расстояние: <b>{totalDistance}</b> км
-            </div>
+            <div style={{ height: 20 }} />
           </Grid>
         </Grid>
       </Box>

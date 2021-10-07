@@ -105,12 +105,19 @@ const OrdersList = ({
             >
               <Typography sx={{ width: '100%', flexShrink: 0 }}>
                 <Button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setSelectedDate(new Date(item).toLocaleDateString('ru'))
                     setSelectedDriver(el[0].driver.name)
                     showRouteOnMap(el)
                   }}
                   endIcon={<LocationIcon />}
+                  style={{
+                    width: '90%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    textAlign: 'left'
+                  }}
                 >
                   {el[0].driver.name}
                 </Button>
