@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -10,6 +11,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const OrdersList = ({
   orders,
@@ -30,17 +32,21 @@ const OrdersList = ({
     setExpandedInner(isExpanded ? index : null)
   }
 
+  const removeAddress = (outer, inner, index) => {
+    let shouldRemove = window.confirm(
+      'Вы действительно хотите удалить данный адрес из списка?'
+    )
+    if (shouldRemove) {
+      const tempOrders = [...orders]
+      tempOrders[outer][inner].splice(index, 1)
+      setOrders([...tempOrders])
+      window.alert('Адрес успешно удалён!')
+    }
+  }
+
   function onDragEnd(result) {
     if (!result.destination) {
-      let shouldRemove = window.confirm(
-        'Вы действительно хотите удалить данный адрес из списка?'
-      )
-      if (shouldRemove) {
-        const tempOrders = [...orders]
-        tempOrders[expanded][expandedInner].splice(result.source.index, 1)
-        setOrders([...tempOrders])
-        return window.alert('Адрес успешно удалён!')
-      }
+      removeAddress(expanded, expandedInner, result.source.index)
     } else if (
       result.destination.index === result.source.index ||
       result.destination.index === 0
@@ -77,6 +83,13 @@ const OrdersList = ({
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemText primary={`${id}. ${order.address}`} />
+                <IconButton
+                  aria-label='delete'
+                  color='error'
+                  onClick={() => removeAddress(expanded, expandedInner, id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
               </ListItemButton>
             </ListItem>
           </div>
