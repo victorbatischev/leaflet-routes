@@ -49,7 +49,7 @@ const MapView = ({
 
   useEffect(() => {
     if (map && path && bounds) {
-      map.flyToBounds(bounds, { padding: [20, 20] })
+      map.flyToBounds(bounds, { padding: [2, 2] })
     } // eslint-disable-next-line
   }, [path, bounds])
 

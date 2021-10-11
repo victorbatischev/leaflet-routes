@@ -31,25 +31,33 @@ const OrdersList = ({
   }
 
   function onDragEnd(result) {
-    if (
-      !result.destination ||
+    if (!result.destination) {
+      let shouldRemove = window.confirm(
+        'Вы действительно хотите удалить данный адрес из списка?'
+      )
+      if (shouldRemove) {
+        const tempOrders = [...orders]
+        tempOrders[expanded][expandedInner].splice(result.source.index, 1)
+        setOrders([...tempOrders])
+        return window.alert('Адрес успешно удалён!')
+      }
+    } else if (
       result.destination.index === result.source.index ||
       result.destination.index === 0
-    )
-      return
-
-    const tempOrders = [...orders]
-    const [removed] = tempOrders[expanded][expandedInner].splice(
-      result.source.index,
-      1
-    )
-    tempOrders[expanded][expandedInner].splice(
-      result.destination.index,
-      0,
-      removed
-    )
-
-    setOrders([...tempOrders])
+    ) {
+    } else {
+      const tempOrders = [...orders]
+      const [removed] = tempOrders[expanded][expandedInner].splice(
+        result.source.index,
+        1
+      )
+      tempOrders[expanded][expandedInner].splice(
+        result.destination.index,
+        0,
+        removed
+      )
+      setOrders([...tempOrders])
+    }
   }
 
   const AddressList = ({ addresses }) =>

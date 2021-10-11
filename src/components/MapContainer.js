@@ -7,6 +7,7 @@ import Button from '@mui/material/Button'
 
 import MapView from './MapView'
 import OrdersList from './OrdersList'
+import Loader from './Loader'
 
 import { dataUrl, data } from '../Constants'
 import { drawRoutes } from '../Utils'
@@ -92,6 +93,9 @@ const MapContainer = () => {
   }, [ordersByDate])
 
   const showRouteOnMap = async (el) => {
+    setPath([])
+    setCoordinates([])
+    setTotalDistance(0)
     const { polyline, bounds, distance, coordinates } = await drawRoutes(el)
     setPath(polyline)
     setBounds(bounds)
@@ -100,18 +104,19 @@ const MapContainer = () => {
   }
 
   return (
-    <Container>
+    <Container style={{ padding: 0, marginLeft: 50, maxWidth: '95vw' }}>
       <Box style={{ marginTop: 30 }}>
-        <Grid container spacing={2} marginBottom={6}>
-          <Grid item xs={12} sm={2}></Grid>
-          <Grid item xs={12} sm={3}>
+        <Grid container spacing={4} marginBottom={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
+              fullWidth
               id='outlined-name'
               label='Номер автомобиля'
               inputRef={inputNumber}
             />
           </Grid>
-          <Grid item xs={12} sm={4} md={4} xl={3}>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6} marginTop={-2}>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               <Button
                 onClick={() => searchOrders(inputNumber.current.value)}
@@ -138,7 +143,7 @@ const MapContainer = () => {
             </div>
           </Grid>
         </Grid>
-        <Grid container spacing={12}>
+        <Grid container spacing={4}>
           <Grid item xs={12} sm={6}>
             {ordersByDriver ? (
               <OrdersList
@@ -153,15 +158,45 @@ const MapContainer = () => {
               <div>Загрузка...</div>
             )}
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} marginTop={'-160px'}>
+            {selectedDriver && !coordinates.length && (
+              <div
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                  zIndex: 1000
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: 'center',
+                    position: 'absolute',
+                    top: 200,
+                    padding: 50,
+                    width: '75%',
+                    background: '#0008'
+                  }}
+                >
+                  <h3 style={{ color: '#f8f8f8' }}>
+                    Подождите, пожалуйста, идёт построение маршрута...
+                  </h3>
+                  <Loader />
+                </div>
+              </div>
+            )}
             <div>
-              Водитель: <b>{selectedDriver}</b>
-            </div>
-            <div>
-              Дата: <b>{selectedDate}</b>
+              Водитель: <b>{selectedDriver || 'Не выбран'}</b>
             </div>
             <div style={{ marginBottom: 20 }}>
-              Итоговое расстояние: <b>{totalDistance}</b> км
+              <span>
+                Дата: <b>{selectedDate || 'Не выбрана'}</b>
+              </span>
+              <span style={{ marginLeft: 20 }}>
+                Итоговое расстояние: <b>{totalDistance}</b> км
+              </span>
             </div>
             <MapView
               path={path}
